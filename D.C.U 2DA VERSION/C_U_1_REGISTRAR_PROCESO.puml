@@ -1,0 +1,29 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Juez Administrador" as juez
+
+
+rectangle "Sistema Administrador de Procesos Judiciales" {
+    usecase "C.U.1 Registrar Proceso" as CU1
+    usecase "C.U.1.1 Ingresar Datos del Proceso" as CU11
+   
+}
+
+juez --> CU1
+
+CU1 .> CU11 : <<include>>
+
+
+
+note right of CU11
+tipo de proceso,
+número,
+demandante,
+demandado,
+tipo de entrada,
+fecha de entrada
+end note
+
+@enduml

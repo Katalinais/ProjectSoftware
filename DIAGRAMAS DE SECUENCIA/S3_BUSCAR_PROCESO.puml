@@ -1,0 +1,17 @@
+@startuml
+actor "Juez Administrador" as juez
+participant "Sistema" as sistema
+participant "Módulo Gestión de Procesos" as modulo
+
+== Buscar Proceso ==
+
+juez -> sistema : Solicitar buscar proceso
+sistema -> modulo : Iniciar flujo de búsqueda
+modulo --> sistema : Confirmación de inicio
+
+juez -> sistema : Ingresar número de proceso
+sistema -> modulo : Consultar proceso
+modulo --> sistema : Resultado de búsqueda (encontrado / no encontrado)
+sistema --> juez : Mostrar información del proceso / notificación de error
+
+@enduml

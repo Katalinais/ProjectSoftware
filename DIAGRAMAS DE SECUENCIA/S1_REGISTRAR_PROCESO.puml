@@ -1,0 +1,19 @@
+@startuml
+actor "Juez Administrador" as juez
+participant "Sistema" as sistema
+participant "Módulo Gestión de Procesos" as modulo
+
+== Registrar Proceso ==
+
+juez -> sistema : Solicitar registrar proceso
+sistema -> modulo : Iniciar flujo de registro de proceso
+modulo --> sistema : Confirmación de inicio
+
+juez -> sistema : Ingresar datos\n(Tipo de proceso, Nº, Demandante,\nDemandado, Tipo de entrada, Fecha)
+sistema -> modulo : Validar y almacenar datos
+modulo --> sistema : Resultado de validación (éxito / error)
+sistema --> juez : Confirmación de registro / notificación de error
+
+@enduml
+
+REVISAR ESTE

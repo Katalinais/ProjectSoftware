@@ -1,0 +1,26 @@
+@startuml
+actor "Juez Administrador" as juez
+participant "Sistema" as sistema
+participant "Módulo Gestión de Actuaciones" as modulo
+
+== Modificar descripciones de actuaciones ==
+
+juez -> sistema : Solicitar modificar descripción de actuación
+sistema -> modulo : Iniciar flujo de modificación
+modulo --> sistema : Confirmación de inicio
+
+juez -> sistema : Seleccionar tipo de proceso
+sistema -> modulo : Registrar selección
+
+juez -> sistema : Seleccionar tipo de actuación
+sistema -> modulo : Registrar selección
+
+juez -> sistema : Seleccionar descripción
+sistema -> modulo : Cargar datos de la descripción
+
+juez -> sistema : Ingresar cambios en la descripción
+sistema -> modulo : Validar y actualizar descripción
+modulo --> sistema : Resultado de validación (éxito / error)
+sistema --> juez : Confirmación de actualización / notificación de error
+
+@enduml

@@ -1,0 +1,23 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Juez Administrador" as juez
+
+rectangle "Caso de Uso 6: Modificar Persona" {
+    usecase "C.U.6.1 Modificar Persona" as CU61
+    usecase "C.U.6.1.1 Ingresar cédula de persona a modificar" as CU611
+    usecase "C.U.6.1.2 Modificar los datos que se desean" as CU612
+}
+
+juez --> CU61
+CU61 .> CU611 : <<include>>
+CU61 .> CU612 : <<include>>
+
+note right of CU612
+Nombre, apellido,  
+tipo de documento  
+y número de documento
+end note
+
+@enduml

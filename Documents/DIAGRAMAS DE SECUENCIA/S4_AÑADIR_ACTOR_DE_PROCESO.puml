@@ -1,0 +1,18 @@
+@startuml
+actor "Juez Administrador" as juez
+participant "Sistema" as sistema
+participant "Módulo Gestión de Actores" as modulo
+
+== Añadir Actor de Proceso ==
+
+juez -> sistema : Solicitar "Añadir Actor de Proceso"
+sistema -> modulo : Crear nuevo flujo de registro de actor
+modulo --> sistema : Confirmación de inicio de registro
+
+
+juez -> sistema : Ingresar datos (Nombre, Apellido,\nTipo Doc., Nº Doc.)
+sistema -> modulo : Validar y almacenar datos del actor
+modulo --> sistema : Resultado de validación (éxito / error)
+sistema --> juez : Confirmación de actor añadido / notificación de error
+
+@enduml

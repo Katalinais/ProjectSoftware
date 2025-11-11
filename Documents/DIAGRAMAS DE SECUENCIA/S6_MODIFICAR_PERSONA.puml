@@ -1,0 +1,21 @@
+@startuml
+actor "Juez Administrador" as juez
+participant "Sistema" as sistema
+participant "Módulo Gestión de Personas" as modulo
+
+== Modificar Persona ==
+
+juez -> sistema : Solicitar modificar persona
+sistema -> modulo : Iniciar flujo de modificación
+modulo --> sistema : Confirmación de inicio
+
+juez -> sistema : Ingresar cédula de persona a modificar
+sistema -> modulo : Consultar persona
+modulo --> sistema : Resultado de búsqueda
+
+juez -> sistema : Ingresar nuevos datos\n(Nombre, Apellido, Tipo Doc., Nº Doc.)
+sistema -> modulo : Validar y actualizar información
+modulo --> sistema : Resultado de validación (éxito / error)
+sistema --> juez : Confirmación de actualización / notificación de error
+
+@enduml

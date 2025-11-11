@@ -1,0 +1,17 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Juez Administrador" as juez
+
+rectangle "Sistema Administrador de procesos judiciales" {
+    usecase "C.U.7 Generar reporte" as CU7
+    usecase "C.U.7.1 Visualizar reporte" as CU71
+    usecase "CU7.2 Descargar reporte" as CU72
+}
+
+juez --> CU7
+CU7 .> CU71 : <<extend>>
+CU7 .> CU72 : <<extend>>
+
+@enduml

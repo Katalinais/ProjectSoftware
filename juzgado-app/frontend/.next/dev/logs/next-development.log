@@ -1,0 +1,43 @@
+[00:00:01.011] Server  LOG      ✓ Ready in 827ms
+[00:00:02.421] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:02.584] Browser LOG     [Navbar] mounted, pathname= /reports
+[00:00:02.584] Browser LOG     [Navbar] found logout button (fallback). attaching native listener
+[00:00:11.248] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:11.361] Browser LOG     [Navbar] mounted, pathname= /reports
+[00:00:11.361] Browser LOG     [Navbar] found logout button (fallback). attaching native listener
+[00:00:13.362] Browser LOG     [Logout][native] native handler invoked (fallback)
+[00:00:13.362] Browser LOG     [Logout][native] cleared localStorage
+[00:00:13.466] Browser LOG     [Logout] onClick wrapper invoked
+[00:00:13.466] Browser LOG     [Logout][react] handler called
+[00:00:13.466] Browser LOG     [Logout] localStorage cleared
+[00:00:13.699] Server  WARN     ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[00:00:13.970] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:01:21.208] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:01:32.762] Server  WARN     ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[00:01:33.032] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:01:33.141] Browser LOG     [Navbar] mounted, pathname= /
+[00:01:33.141] Browser LOG     [Navbar] found logout button (fallback). attaching native listener
+[00:01:34.694] Browser LOG     [Logout][native] native handler invoked (fallback)
+[00:01:34.694] Browser LOG     [Logout][native] cleared localStorage
+[00:01:35.031] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:02:17.783] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:02:17.892] Browser LOG     [Navbar] mounted, pathname= /
+[00:02:17.892] Browser LOG     [Navbar] found logout button (fallback). attaching native listener
+[00:03:13.427] Browser LOG     [Logout][native] native handler invoked (fallback)
+[00:03:13.427] Browser LOG     [Logout][native] cleared localStorage
+[00:03:13.760] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:04:07.635] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:04:07.744] Browser LOG     [Navbar] mounted, pathname= /
+[00:04:07.744] Browser LOG     [Navbar] found logout button (fallback). attaching native listener
+[00:04:10.208] Browser LOG     [Navbar] mounted, pathname= /people
+[00:04:10.208] Browser LOG     [Navbar] found logout button (fallback). attaching native listener
+[00:04:15.867] Browser LOG     [Navbar] mounted, pathname= /trials
+[00:04:15.867] Browser LOG     [Navbar] found logout button (fallback). attaching native listener
+[00:04:17.341] Browser LOG     [Navbar] mounted, pathname= /actions
+[00:04:17.341] Browser LOG     [Navbar] found logout button (fallback). attaching native listener
+[00:04:17.935] Browser LOG     [Navbar] mounted, pathname= /reports
+[00:04:17.936] Browser LOG     [Navbar] found logout button (fallback). attaching native listener
+[00:10:50.108] Browser LOG     [Navbar] mounted, pathname= /people
+[00:10:50.108] Browser LOG     [Navbar] found logout button (fallback). attaching native listener
+[00:14:41.199] Browser LOG     [Navbar] mounted, pathname= /trials
+[00:14:41.199] Browser LOG     [Navbar] found logout button (fallback). attaching native listener

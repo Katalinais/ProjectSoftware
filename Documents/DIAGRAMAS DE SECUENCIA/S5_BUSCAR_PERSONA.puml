@@ -1,0 +1,17 @@
+@startuml
+actor "Juez Administrador" as juez
+participant "Sistema" as sistema
+participant "Módulo Gestión de Personas" as modulo
+
+== Buscar Persona ==
+
+juez -> sistema : Solicitar buscar persona
+sistema -> modulo : Iniciar flujo de búsqueda
+modulo --> sistema : Confirmación de inicio
+
+juez -> sistema : Ingresar cédula de persona
+sistema -> modulo : Consultar persona
+modulo --> sistema : Resultado de búsqueda (encontrada / no encontrada)
+sistema --> juez : Mostrar información de la persona / notificación de error
+
+@enduml

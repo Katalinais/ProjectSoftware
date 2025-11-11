@@ -67,7 +67,8 @@ enum TypeTrialEnum {
 model Person {
   id        String   @id @default(uuid())
   name      String
-  lastName  String
+  documentType  String
+  document String  @unique
 
   defendantOf Trial[] @relation("DefendantTrials")
   plaintiffOf Trial[] @relation("PlaintiffTrials")

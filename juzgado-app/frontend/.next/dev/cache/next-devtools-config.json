@@ -1,1 +1,9 @@
-{}
+{
+  "devToolsPanelSize": {
+    "__nextjs-dev-tools-panel-size_segment-explorer": {
+      "width": 341,
+      "height": 375
+    }
+  },
+  "theme": "system"
+}

@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useApp } from "@/contexts/AppContext"
-import { Button } from "@/components/ui/button"
+import { LogOut } from "lucide-react"
 import ProcesosModule from "@/components/modules/ProcesosModule"
 import PersonasModule from "@/components/modules/PersonasModule"
 import ActuacionesModule from "@/components/modules/ActuacionesModule"
@@ -27,13 +27,13 @@ export default function Dashboard() {
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
-      <aside className="w-64 bg-slate-900 text-white shadow-lg">
+      <aside className="w-64 bg-slate-900 text-white shadow-lg flex flex-col h-screen">
         <div className="p-6 border-b border-slate-700">
           <h2 className="text-xl font-bold">Sistema Legal</h2>
           <p className="text-sm text-slate-400 mt-1">{user?.name}</p>
         </div>
 
-        <nav className="p-4">
+        <nav className="p-4 flex-grow">
           {modules.map((module) => (
             <button
               key={module.id}
@@ -48,13 +48,14 @@ export default function Dashboard() {
           ))}
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 p-4 bg-slate-800 border-t border-slate-700">
-          <Button
+        <div className="p-4 border-t border-slate-700">
+          <button
             onClick={logout}
-            className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 rounded-lg transition-colors"
+            className="w-full text-left px-4 py-3 rounded-lg transition-colors text-slate-300 hover:bg-red-600 hover:text-white"
           >
+            <LogOut className="inline-block mr-2 w-4 h-4" />
             Cerrar Sesión
-          </Button>
+          </button>
         </div>
       </aside>
 

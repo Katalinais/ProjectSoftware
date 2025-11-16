@@ -1,6 +1,4 @@
-import { defineConfig } from '@prisma/cli'
-
-export default defineConfig({
+export const prismaConfig = {
   schema: './prisma/schema.prisma',
-  envFile: '.env',
-})
+  envFile: '.env'
+};

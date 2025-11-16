@@ -7,62 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum EntryType {
-  POR_REPARTO
-  REINGRESO
-  RECIBIDO_OTROS_DESPACHOS
-  COMPETENCIA
-  IMPEDIMENTO
-  OTRAS_ENTRADAS_NO_EFECTIVAS
+enum Status {
+  PRIMERA_INSTANCIA
+  SEGUNDA_INSTANCIA
+  ARCHIVADO
 }
-
-enum ActionType {
-  AUTO
-  SENTENCIA
-}
-
-enum GuardianShipType {
-  SALUD
-  SEGURIDAD_SOCIAL
-  VIDA
-  MINIMO_VITAL
-  IGUALDAD
-  EDUCACION
-  DEBIDO_PROCESO
-  PETICION
-  INFORMACION_PUBLICA
-  CONTRA_PROVIDENCIAS_JUDICIALES
-  MEDIO_AMBIENTE
-  OTROS
-}
-
-enum HabeasCorpusType {
-  LIBERTAD
-  OTROS
-}
-
-enum LaborType {
-  ORDINARIOS_SEGURIDAD_SOCIAL
-  ORDINARIOS_CONTRATOS_TRABAJO
-  ORDINARIOS_RECONOCIMIENTO_HONORARIOS
-  ORDINARIOS_OTROS
-  EJECUTIVOS_SEGURIDAD_SOCIAL
-  EJECUTIVOS_CONTRATO_TRABAJO
-  EJECUTIVOS_APORTES_PARAFISCALES
-  EJECUTIVOS_OTROS
-  CONCILIACION_EXTRAJUDICIAL
-  PAGOS_POR_CONSIGNACION
-  OTROS
-}
-
-
-enum TypeTrialEnum {
-  LABORAL
-  TUTELA
-  INCIDENTE_DE_DESACATO
-  HABEAS_CORPUS
-}
-
 
 model Person {
   id        String   @id @default(uuid())
@@ -72,24 +21,30 @@ model Person {
 
   defendantOf Trial[] @relation("DefendantTrials")
   plaintiffOf Trial[] @relation("PlaintiffTrials")
+
+  @@map("people")
 }
 
 model TypeTrial {
   id          String        @id @default(uuid())
-  name        TypeTrialEnum
-  description String
+  name        String
 
   categories  Category[]
   trials      Trial[]
+  descriptionActions DescriptionAction[]
+
+  @@map("type_trials")
 }
 
 model Category {
   id          String   @id @default(uuid())
   description String
   typeTrialId String
-  typeTrial   TypeTrial @relation(fields: [typeTrialId], references: [id])
 
+  typeTrial   TypeTrial @relation(fields: [typeTrialId], references: [id])
   trials      Trial[]
+
+  @@map("categories")
 }
 
 model TypeAction {
@@ -97,43 +52,65 @@ model TypeAction {
   description String
 
   descriptionActions DescriptionAction[]
+
+  @@map("type_actions")
 }
 
 model DescriptionAction {
   id           String   @id @default(uuid())
   description  String
   typeActionId String
+  typeTrialId  String?
+
   typeAction   TypeAction @relation(fields: [typeActionId], references: [id])
+  typeTrial    TypeTrial? @relation(fields: [typeTrialId], references: [id])
   actions      Action[]
+
+  @@map("description_actions")
 }
 
 model Action {
   id                  String   @id @default(uuid())
-  type                String
   descriptionActionId String
   date                DateTime
 
   descriptionAction DescriptionAction @relation(fields: [descriptionActionId], references: [id])
   trialId           String?
   trial             Trial? @relation(fields: [trialId], references: [id])
+
+  @@map("actions")
+}
+
+model EntryType {
+  id          String   @id @default(uuid())
+  description String
+
+  trials      Trial[]
+
+  @@map("entry_types")
 }
 
 model Trial {
   id           String     @id @default(uuid())
+  number       String
   plaintiffId  String
   defendantId  String
   typeTrialId  String
-  typeTrial    TypeTrial  @relation(fields: [typeTrialId], references: [id])
   arrivalDate  DateTime
   closeDate    DateTime?
-  status       String
-  categoryId   String
-  entryType    EntryType
-  category     Category   @relation(fields: [categoryId], references: [id])
+  status       Status
+  categoryId   String?
+  entryTypeId  String
+  
+  category     Category?   @relation(fields: [categoryId], references: [id])
+  typeTrial    TypeTrial  @relation(fields: [typeTrialId], references: [id])
+  entryType    EntryType  @relation(fields: [entryTypeId], references: [id])
 
   plaintiff    Person     @relation("PlaintiffTrials", fields: [plaintiffId], references: [id])
   defendant    Person     @relation("DefendantTrials", fields: [defendantId], references: [id])
   actions      Action[]
+
+  @@map("trials")
 }
 
 model User {
@@ -141,4 +118,6 @@ model User {
   username  String   @unique
   password  String
   createdAt DateTime @default(now())
+
+  @@map("users")
 }

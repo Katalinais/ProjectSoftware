@@ -18,10 +18,8 @@ interface Proceso {
 interface Persona {
   id: string
   nombre: string
-  cedula: string
-  rol: string
-  email?: string
-  telefono?: string
+  tipoDocumento: "Cédula" | "NIT"
+  numeroDocumento: string
 }
 
 interface Actuacion {

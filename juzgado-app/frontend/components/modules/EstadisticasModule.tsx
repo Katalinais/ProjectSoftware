@@ -19,14 +19,14 @@ export default function EstadisticasModule() {
     [] as Array<{ name: string; value: number }>,
   )
 
-  // Estadísticas por rol
-  const personasPorRol = personas.reduce(
+  // Estadísticas por tipo de documento
+  const personasPorTipoDocumento = personas.reduce(
     (acc, p) => {
-      const existing = acc.find((item) => item.name === p.rol)
+      const existing = acc.find((item) => item.name === p.tipoDocumento)
       if (existing) {
         existing.value++
       } else {
-        acc.push({ name: p.rol, value: 1 })
+        acc.push({ name: p.tipoDocumento, value: 1 })
       }
       return acc
     },
@@ -63,7 +63,7 @@ export default function EstadisticasModule() {
   }
 
   const maxProcesos = Math.max(...procesosPorTipo.map((p) => p.value), 1)
-  const maxPersonas = Math.max(...personasPorRol.map((p) => p.value), 1)
+  const maxPersonas = Math.max(...personasPorTipoDocumento.map((p) => p.value), 1)
   const maxActuaciones = Math.max(...actuacionesPorTipo.map((a) => a.value), 1)
 
   return (
@@ -100,11 +100,11 @@ export default function EstadisticasModule() {
           </div>
         )}
 
-        {/* Personas por rol */}
-        {personasPorRol.length > 0 && (
+        {/* Personas por tipo de documento */}
+        {personasPorTipoDocumento.length > 0 && (
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold text-slate-900 mb-6">Personas por Rol</h3>
-            {personasPorRol.map((item) => (
+            <h3 className="text-lg font-semibold text-slate-900 mb-6">Personas por Tipo de Documento</h3>
+            {personasPorTipoDocumento.map((item) => (
               <ProgressBar key={item.name} label={item.name} value={item.value} max={maxPersonas} />
             ))}
           </div>
@@ -143,10 +143,10 @@ export default function EstadisticasModule() {
             </div>
           </div>
           <div>
-            <h4 className="font-medium text-slate-700 mb-4">Roles de Personas</h4>
+            <h4 className="font-medium text-slate-700 mb-4">Personas por Tipo de Documento</h4>
             <div className="space-y-2">
-              {personasPorRol.length > 0 ? (
-                personasPorRol.map((item) => (
+              {personasPorTipoDocumento.length > 0 ? (
+                personasPorTipoDocumento.map((item) => (
                   <div key={item.name} className="flex justify-between text-sm">
                     <span className="text-slate-600">{item.name}:</span>
                     <span className="font-semibold text-slate-900">{item.value}</span>

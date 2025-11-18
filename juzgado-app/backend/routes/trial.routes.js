@@ -3,12 +3,12 @@ import { addTrial, editTrial, searchTrials, getCategoriesByTrialType, getAllTria
 
 const router = Router();
 
-router.post("/add", addTrial);
-router.post("/edit", editTrial);
-router.get("/search", searchTrials);
-router.get("/categories", getCategoriesByTrialType);
-router.get("/types", getAllTrialTypes);
-router.get("/entry-types", getAllEntryTypes);
+router.post("/add", authMiddleware, addTrial);
+router.post("/edit", authMiddleware, editTrial);
+router.get("/search", authMiddleware, searchTrials);
+router.get("/categories", authMiddleware, getCategoriesByTrialType);
+router.get("/types", authMiddleware, getAllTrialTypes);
+router.get("/entry-types", authMiddleware, getAllEntryTypes);
 
 
 export default router;

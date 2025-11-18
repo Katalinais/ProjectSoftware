@@ -1,6 +1,5 @@
 import { prisma } from "../config/db.js";
 
-// Operaciones para Action
 export const findActionById = async (id) => {
   return await prisma.action.findUnique({ where: { id } });
 };
@@ -90,7 +89,6 @@ export const countActionsByDescriptionActionId = async (descriptionActionId) => 
   });
 };
 
-// Operaciones para DescriptionAction
 export const findDescriptionActionById = async (id) => {
   return await prisma.descriptionAction.findUnique({ where: { id } });
 };
@@ -187,7 +185,6 @@ export const findDescriptionActions = async (whereClause) => {
   });
 };
 
-// Operaciones para TypeAction
 export const findAllTypeActions = async () => {
   return await prisma.typeAction.findMany({
     orderBy: {

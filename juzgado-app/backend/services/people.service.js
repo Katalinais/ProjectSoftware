@@ -17,7 +17,6 @@ export const editPersonService = async (id, name, documentType, document) => {
     throw new Error("La persona no existe");
   }
 
-  // Si el documento cambió, verificar que no exista otro con ese documento
   if (document !== person.document) {
     const existing = await peopleRepository.findPersonByDocument(document);
     if (existing) {

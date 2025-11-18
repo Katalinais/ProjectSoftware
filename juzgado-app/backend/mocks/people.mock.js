@@ -1,10 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
 
-/**
- * Genera datos mock de personas
- * @param {number} count - Número de personas a generar
- * @returns {Array} Array de objetos de personas
- */
 export const generatePeopleMocks = (count = 20) => {
   const firstNames = [
     "María", "José", "Carlos", "Ana", "Luis", "Laura", "Juan", "Carmen",
@@ -36,16 +31,13 @@ export const generatePeopleMocks = (count = 20) => {
   for (let i = 0; i < count; i++) {
     let document, documentType, name;
 
-    // 60% personas naturales, 40% empresas
     if (i % 10 < 6) {
-      // Persona natural
       documentType = "Cédula";
       const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
       const lastName1 = lastNames[Math.floor(Math.random() * lastNames.length)];
       const lastName2 = lastNames[Math.floor(Math.random() * lastNames.length)];
       name = `${firstName} ${lastName1} ${lastName2}`;
       
-      // Generar cédula colombiana válida (8-10 dígitos)
       let cedula;
       do {
         const length = Math.random() > 0.5 ? 10 : 8;
@@ -54,11 +46,9 @@ export const generatePeopleMocks = (count = 20) => {
       
       document = cedula;
     } else {
-      // Empresa
       documentType = "NIT";
       name = companies[Math.floor(Math.random() * companies.length)];
       
-      // Generar NIT colombiano (9 dígitos)
       let nit;
       do {
         nit = Math.floor(Math.random() * (10 ** 9 - 10 ** 8) + 10 ** 8).toString();

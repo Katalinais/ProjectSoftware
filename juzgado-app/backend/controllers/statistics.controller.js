@@ -1,9 +1,6 @@
 import { getStatisticsService } from "../services/statistics.service.js";
 import { generateStatisticsExcel } from "../utils/excelGenerator.js";
 
-/**
- * Obtiene estadísticas filtradas por rango de fechas
- */
 export const getStatistics = async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
@@ -15,9 +12,6 @@ export const getStatistics = async (req, res) => {
   }
 };
 
-/**
- * Genera y descarga un reporte Excel con estadísticas
- */
 export const generateReport = async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
@@ -28,17 +22,14 @@ export const generateReport = async (req, res) => {
       });
     }
 
-    // Obtener estadísticas
     const statistics = await getStatisticsService(startDate, endDate);
 
-    // Generar Excel
     const excelBuffer = await generateStatisticsExcel(
       statistics,
       new Date(startDate),
       new Date(endDate)
     );
 
-    // Configurar headers para descarga
     const fileName = `reporte_estadisticas_${startDate}_${endDate}.xlsx`;
     res.setHeader(
       "Content-Type",
@@ -49,7 +40,6 @@ export const generateReport = async (req, res) => {
       `attachment; filename="${encodeURIComponent(fileName)}"`
     );
 
-    // Enviar buffer
     res.send(excelBuffer);
   } catch (err) {
     console.error("Error al generar reporte:", err);

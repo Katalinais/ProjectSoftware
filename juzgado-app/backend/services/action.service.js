@@ -10,7 +10,6 @@ export const addActionService  = async (id, descriptionActionId, date, trialId, 
 
     await actionRepository.createAction(id, descriptionActionId, date, trialId);
 
-    // Si se proporciona un estado y hay un trialId, actualizar el proceso
     if (status && trialId) {
       await updateTrialStatusService(trialId, status, closeDate);
     }
@@ -30,7 +29,6 @@ export const addActionService  = async (id, descriptionActionId, date, trialId, 
 export const searchActionsService = async (searchTerm, trialId) => {
   const whereClause = {};
 
-  // Si hay un término de búsqueda, buscar en múltiples campos
   if (searchTerm && searchTerm.trim() !== "") {
     const trimmedSearchTerm = searchTerm.trim();
     whereClause.OR = [
@@ -53,7 +51,6 @@ export const searchActionsService = async (searchTerm, trialId) => {
     ];
   }
 
-  // Si hay un trialId, filtrar por ese proceso
   if (trialId && trialId.trim() !== "") {
     whereClause.trialId = trialId;
   }
@@ -85,15 +82,12 @@ export const getAllDescriptionActionsService = async (typeTrialId) => {
     const whereClause = {};
   
     if (typeTrialId) {
-      // Obtener el tipo de proceso para verificar si es Ordinario o Ejecutivo
       const typeTrial = await trialRepository.findTypeTrialById(typeTrialId);
 
       if (typeTrial) {
         const typeTrialName = typeTrial.name.toLowerCase();
         
-        // Si es Ordinario o Ejecutivo, incluir descripciones de ambos tipos
         if (typeTrialName === "ordinario" || typeTrialName === "ejecutivo") {
-          // Buscar ambos tipos de proceso
           const ordinarioType = await trialRepository.findTypeTrialByName("Ordinario");
           const ejecutivoType = await trialRepository.findTypeTrialByName("Ejecutivo");
 
@@ -106,7 +100,6 @@ export const getAllDescriptionActionsService = async (typeTrialId) => {
             { typeTrialId: null }
           ];
         } else {
-          // Para otros tipos, solo incluir ese tipo y las generales
           whereClause.OR = [
             { typeTrialId: typeTrialId },
             { typeTrialId: null }
@@ -183,7 +176,6 @@ export const editDescriptionActionService = async (id, description, typeActionId
     }
   }
 
-  // Verificar si ya existe otra descripción igual para el mismo tipo de acción y tipo de proceso
   const existing = await actionRepository.findDescriptionActionByFields(description, typeActionId, typeTrialId, id);
   if (existing) {
     throw new Error("Ya existe una descripción con ese nombre para este tipo de acción y tipo de proceso");

@@ -29,7 +29,6 @@ export const addTrialService = async (id, number, typeTrialId, categoryId, plain
     throw new Error("El tipo de proceso no existe");
   }
 
-  // Validar que "pago por consignación" no tenga categoría
   const typeTrialName = typeTrial.name.toLowerCase()
   console.log(typeTrialName);
   if (typeTrialName === "pagos por consignación" || typeTrialName === "pagos por consignacion") {
@@ -37,7 +36,6 @@ export const addTrialService = async (id, number, typeTrialId, categoryId, plain
       throw new Error("El tipo de proceso 'Pago por consignación' no debe tener categoría");
     }
   } else {
-    // Para otros tipos, validar que tengan categoría
     if (!categoryId) {
       throw new Error("La categoría es requerida para este tipo de proceso");
     }
@@ -73,14 +71,12 @@ export const editTrialService = async (id, typeTrialId, categoryId, plaintiffId,
     throw new Error("El tipo de proceso no existe");
   }
 
-  // Validar que "pago por consignación" no tenga categoría
   const typeTrialName = typeTrial.name.toLowerCase();
   if (typeTrialName === "pagos por consignación" || typeTrialName === "pagos por consignacion") {
     if (categoryId) {
       throw new Error("El tipo de proceso 'Pago por consignación' no debe tener categoría");
     }
   } else {
-    // Para otros tipos, validar que tengan categoría
     if (!categoryId) {
       throw new Error("La categoría es requerida para este tipo de proceso");
     }
@@ -167,8 +163,7 @@ export const getCategoriesByTrialTypeService = async (trialTypeName) => {
     if (!dbTypeName) {
       dbTypeName = trialTypeName;
     }
-    
-    console.log(`Buscando categorías para tipo: ${trialTypeName} -> ${dbTypeName}`);
+ 
     const typeTrial = await trialRepository.findTypeTrialByName(dbTypeName);
 
     if (!typeTrial) {

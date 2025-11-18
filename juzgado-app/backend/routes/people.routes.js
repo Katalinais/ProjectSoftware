@@ -3,8 +3,8 @@ import { addPerson, editPerson, searchPeople } from "../controllers/people.contr
 
 const router = Router();
 
-router.post("/add", addPerson);
-router.post("/edit", editPerson);
-router.get("/search", searchPeople);
+router.post("/add", authMiddleware, addPerson);
+router.post("/edit", authMiddleware, editPerson);
+router.get("/search", authMiddleware, searchPeople);
 
 export default router;

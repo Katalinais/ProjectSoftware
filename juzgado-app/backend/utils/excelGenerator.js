@@ -1,16 +1,8 @@
 import ExcelJS from "exceljs";
 
-/**
- * Genera un archivo Excel con estadísticas de procesos, personas y actuaciones
- * @param {Object} stats - Objeto con las estadísticas
- * @param {Date} startDate - Fecha de inicio del reporte
- * @param {Date} endDate - Fecha de fin del reporte
- * @returns {Promise<Buffer>} Buffer del archivo Excel
- */
 export const generateStatisticsExcel = async (stats, startDate, endDate) => {
   const workbook = new ExcelJS.Workbook();
   
-  // Formato de fechas
   const formatDate = (date) => {
     if (!date) return "N/A";
     return new Date(date).toLocaleDateString("es-ES", {
@@ -22,43 +14,34 @@ export const generateStatisticsExcel = async (stats, startDate, endDate) => {
 
   const dateRange = `Del ${formatDate(startDate)} al ${formatDate(endDate)}`;
 
-  // Hoja 1: Matriz de Categorías x (Tipos de Entrada + Descripciones Auto + Total Sentencias)
   const matrixSheet = workbook.addWorksheet("Matriz Categorías");
   
-  // Obtener datos de la matriz
   const matrixData = stats.matrixData || {};
   const entryTypes = stats.entryTypes || [];
   const autoDescriptions = stats.autoDescriptions || [];
 
-  // Agregar título y período primero
   matrixSheet.addRow(["REPORTE DE ESTADÍSTICAS - MATRIZ DE CATEGORÍAS"]);
   matrixSheet.addRow(["Período", dateRange]);
   matrixSheet.addRow([""]);
   
-  // Crear encabezados
   const headerRow = ["Categoría"];
   
-  // Agregar tipos de entrada como columnas
   entryTypes.forEach(entryType => {
     headerRow.push(entryType.description);
   });
   
-  // Agregar descripciones de auto como columnas
   autoDescriptions.forEach(autoDesc => {
     headerRow.push(autoDesc.description);
   });
   
-  // Agregar columna de total de sentencias
   headerRow.push("Total Sentencias");
 
   matrixSheet.addRow(headerRow);
   
-  // Estilo para el título (fila 1)
   const titleRow = matrixSheet.getRow(1);
   titleRow.font = { bold: true, size: 14 };
   titleRow.alignment = { horizontal: "center" };
   
-  // Calcular la última columna para el merge (manejar más de 26 columnas)
   const getColumnLetter = (num) => {
     let result = '';
     while (num > 0) {
@@ -71,7 +54,6 @@ export const generateStatisticsExcel = async (stats, startDate, endDate) => {
   const lastColumn = getColumnLetter(headerRow.length);
   matrixSheet.mergeCells(`A1:${lastColumn}1`);
   
-  // Estilo para el encabezado de datos (fila 4)
   const headerRowObj = matrixSheet.getRow(4);
   headerRowObj.font = { bold: true, size: 11 };
   headerRowObj.fill = {
@@ -82,46 +64,36 @@ export const generateStatisticsExcel = async (stats, startDate, endDate) => {
   headerRowObj.font = { ...headerRowObj.font, color: { argb: "FFFFFFFF" } };
   headerRowObj.alignment = { horizontal: "center", vertical: "middle" };
 
-  // Agregar filas de datos por categoría
-  // Primero ordenar: Ordinario primero, luego Ejecutivo
   const sortedCategories = Object.values(matrixData).sort((a, b) => {
-    // Ordinario primero (índice menor), Ejecutivo después (índice mayor)
     if (a.typeTrialName === "Ordinario" && b.typeTrialName === "Ejecutivo") return -1;
     if (a.typeTrialName === "Ejecutivo" && b.typeTrialName === "Ordinario") return 1;
-    // Si son del mismo tipo, ordenar alfabéticamente por nombre de categoría
     return a.categoryName.localeCompare(b.categoryName);
   });
 
   sortedCategories.forEach(categoryData => {
-    // Formato: "Tipo de Proceso - Categoría"
     const categoryLabel = `${categoryData.typeTrialName} - ${categoryData.categoryName}`;
     const row = [categoryLabel];
     
-    // Agregar conteos de tipos de entrada
     entryTypes.forEach(entryType => {
       row.push(categoryData.entryTypes[entryType.id] || 0);
     });
     
-    // Agregar conteos de descripciones de auto
     autoDescriptions.forEach(autoDesc => {
       row.push(categoryData.autoDescriptions[autoDesc.id] || 0);
     });
     
-    // Agregar total de sentencias
     row.push(categoryData.totalSentencias || 0);
     
     matrixSheet.addRow(row);
   });
-
-  // Ajustar ancho de columnas
+  
   matrixSheet.columns = [
-    { width: 30 }, // Columna de categorías
-    ...Array(entryTypes.length).fill({ width: 20 }), // Columnas de tipos de entrada
-    ...Array(autoDescriptions.length).fill({ width: 25 }), // Columnas de descripciones de auto
-    { width: 18 } // Columna de total sentencias
+    { width: 30 },
+    ...Array(entryTypes.length).fill({ width: 20 }),
+    ...Array(autoDescriptions.length).fill({ width: 25 }),
+    { width: 18 }
   ];
 
-  // Congelar primera columna y fila de encabezados
   matrixSheet.views = [{
     state: "frozen",
     xSplit: 1,
@@ -130,7 +102,85 @@ export const generateStatisticsExcel = async (stats, startDate, endDate) => {
     activeCell: "B5"
   }];
 
-  // Hoja 2: Resumen General
+  const tutelaMatrixSheet = workbook.addWorksheet("Matriz Tutela");
+  const tutelaMatrixData = stats.tutelaMatrixData || {};
+  const tutelaCategories = stats.tutelaCategories || [];
+  const tutelaEntryTypes = stats.tutelaEntryTypes || [];
+  const tutelaAutoDescriptions = stats.tutelaAutoDescriptions || [];
+  const tutelaSentenciaDescriptions = stats.tutelaSentenciaDescriptions || [];
+
+  tutelaMatrixSheet.addRow(["REPORTE DE ESTADÍSTICAS - MATRIZ DE TUTELA"]);
+  tutelaMatrixSheet.addRow(["Período", dateRange]);
+  tutelaMatrixSheet.addRow([""]);
+
+  const tutelaHeaderRow = ["Categoría"];
+  
+  tutelaEntryTypes.forEach(entryType => {
+    tutelaHeaderRow.push(entryType.description);
+  });
+  
+  tutelaAutoDescriptions.forEach(autoDesc => {
+    tutelaHeaderRow.push(autoDesc.description);
+  });
+  
+  tutelaSentenciaDescriptions.forEach(sentenciaDesc => {
+    tutelaHeaderRow.push(sentenciaDesc.description);
+  });
+
+  tutelaMatrixSheet.addRow(tutelaHeaderRow);
+
+  const tutelaTitleRow = tutelaMatrixSheet.getRow(1);
+  tutelaTitleRow.font = { bold: true, size: 14 };
+  tutelaTitleRow.alignment = { horizontal: "center" };
+  const tutelaLastColumn = getColumnLetter(tutelaHeaderRow.length);
+  tutelaMatrixSheet.mergeCells(`A1:${tutelaLastColumn}1`);
+
+  const tutelaHeaderRowObj = tutelaMatrixSheet.getRow(4);
+  tutelaHeaderRowObj.font = { bold: true, size: 11 };
+  tutelaHeaderRowObj.fill = {
+    type: "pattern",
+    pattern: "solid",
+    fgColor: { argb: "FF4472C4" }
+  };
+  tutelaHeaderRowObj.font = { ...tutelaHeaderRowObj.font, color: { argb: "FFFFFFFF" } };
+  tutelaHeaderRowObj.alignment = { horizontal: "center", vertical: "middle" };
+
+  tutelaCategories.forEach(category => {
+    const categoryData = tutelaMatrixData[category.id];
+    if (categoryData) {
+      const row = [category.description];
+      
+      tutelaEntryTypes.forEach(entryType => {
+        row.push(categoryData.entryTypes[entryType.id] || 0);
+      });
+      
+      tutelaAutoDescriptions.forEach(autoDesc => {
+        row.push(categoryData.autoDescriptions[autoDesc.id] || 0);
+      });
+      
+      tutelaSentenciaDescriptions.forEach(sentenciaDesc => {
+        row.push(categoryData.sentenciaDescriptions[sentenciaDesc.id] || 0);
+      });
+      
+      tutelaMatrixSheet.addRow(row);
+    }
+  });
+
+  tutelaMatrixSheet.columns = [
+    { width: 30 },
+    ...Array(tutelaEntryTypes.length).fill({ width: 20 }),
+    ...Array(tutelaAutoDescriptions.length).fill({ width: 25 }),
+    ...Array(tutelaSentenciaDescriptions.length).fill({ width: 25 })
+  ];
+
+  tutelaMatrixSheet.views = [{
+    state: "frozen",
+    xSplit: 1,
+    ySplit: 4,
+    topLeftCell: "B5",
+    activeCell: "B5"
+  }];
+
   const summarySheet = workbook.addWorksheet("Resumen General");
   summarySheet.columns = [
     { width: 30 },
@@ -147,13 +197,11 @@ export const generateStatisticsExcel = async (stats, startDate, endDate) => {
   summarySheet.addRow(["Total de Descripciones", stats.totalDescriptions || 0]);
   summarySheet.addRow([""]);
 
-  // Estilo para el título
   summarySheet.getRow(1).font = { bold: true, size: 16 };
   summarySheet.getRow(4).font = { bold: true, size: 12 };
   summarySheet.getRow(1).alignment = { horizontal: "center" };
   summarySheet.mergeCells("A1:B1");
 
-  // Hoja 2: Procesos por Tipo
   if (stats.trialsByType && stats.trialsByType.length > 0) {
     const trialsSheet = workbook.addWorksheet("Procesos por Tipo");
     trialsSheet.columns = [
@@ -174,7 +222,6 @@ export const generateStatisticsExcel = async (stats, startDate, endDate) => {
       trialsSheet.addRow([item.name, item.value]);
     });
 
-    // Agregar total
     const totalRow = trialsSheet.addRow(["TOTAL", stats.totalTrials || 0]);
     totalRow.font = { bold: true };
     totalRow.fill = {
@@ -184,7 +231,7 @@ export const generateStatisticsExcel = async (stats, startDate, endDate) => {
     };
   }
 
-  // Hoja 3: Personas por Tipo de Documento
+  // Hoja 5: Personas por Tipo de Documento
   if (stats.peopleByDocumentType && stats.peopleByDocumentType.length > 0) {
     const peopleSheet = workbook.addWorksheet("Personas por Tipo");
     peopleSheet.columns = [
@@ -205,7 +252,6 @@ export const generateStatisticsExcel = async (stats, startDate, endDate) => {
       peopleSheet.addRow([item.name, item.value]);
     });
 
-    // Agregar total
     const totalRow = peopleSheet.addRow(["TOTAL", stats.totalPeople || 0]);
     totalRow.font = { bold: true };
     totalRow.fill = {
@@ -215,7 +261,7 @@ export const generateStatisticsExcel = async (stats, startDate, endDate) => {
     };
   }
 
-  // Hoja 4: Actuaciones por Tipo
+  // Hoja 6: Actuaciones por Tipo
   if (stats.actionsByType && stats.actionsByType.length > 0) {
     const actionsSheet = workbook.addWorksheet("Actuaciones por Tipo");
     actionsSheet.columns = [
@@ -236,7 +282,7 @@ export const generateStatisticsExcel = async (stats, startDate, endDate) => {
       actionsSheet.addRow([item.name, item.value]);
     });
 
-    // Agregar total
+
     const totalRow = actionsSheet.addRow(["TOTAL", stats.totalActions || 0]);
     totalRow.font = { bold: true };
     totalRow.fill = {
@@ -246,7 +292,7 @@ export const generateStatisticsExcel = async (stats, startDate, endDate) => {
     };
   }
 
-  // Hoja 5: Detalle de Procesos
+  // Hoja 7: Detalle de Procesos
   if (stats.trials && stats.trials.length > 0) {
     const trialsDetailSheet = workbook.addWorksheet("Detalle de Procesos");
     trialsDetailSheet.columns = [
@@ -289,7 +335,6 @@ export const generateStatisticsExcel = async (stats, startDate, endDate) => {
     });
   }
 
-  // Generar buffer
   const buffer = await workbook.xlsx.writeBuffer();
   return buffer;
 };

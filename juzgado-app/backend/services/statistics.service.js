@@ -153,6 +153,100 @@ export const getStatisticsService = async (startDate, endDate) => {
       }
     });
 
+    // Matriz de Tutela: Filas = Categorías, Columnas = Tipos de entrada + Descripciones de auto + Sentencias
+    const tutelaType = await trialRepository.findTypeTrialByName("Tutela");
+    const tutelaCategories = tutelaType 
+      ? await trialRepository.findCategoriesByTypeTrialId(tutelaType.id)
+      : [];
+
+    // Obtener descripciones de actuación para Tutela (autos y sentencias)
+    const tutelaAutoDescriptions = descriptionActions.filter(da => {
+      const typeActionName = da.typeAction?.description?.toLowerCase() || "";
+      const isAuto = typeActionName.includes("auto");
+      const typeTrialName = da.typeTrial?.name?.toLowerCase() || "";
+      const isTutela = !da.typeTrialId || typeTrialName === "tutela";
+      return isAuto && isTutela;
+    });
+
+    const tutelaSentenciaDescriptions = descriptionActions.filter(da => {
+      const typeActionName = da.typeAction?.description?.toLowerCase() || "";
+      const isSentencia = typeActionName.includes("sentencia");
+      const typeTrialName = da.typeTrial?.name?.toLowerCase() || "";
+      const isTutela = !da.typeTrialId || typeTrialName === "tutela";
+      return isSentencia && isTutela;
+    });
+
+    // Filtrar procesos de Tutela
+    const tutelaTrials = trials.filter(trial => {
+      const typeName = trial.typeTrial?.name?.toLowerCase();
+      return typeName === "tutela";
+    });
+
+    // Crear matriz de Tutela: filas = categorías, columnas = entryTypes + autoDescriptions + sentenciaDescriptions
+    const tutelaMatrixData = {};
+
+    // Inicializar filas (categorías)
+    tutelaCategories.forEach(category => {
+      tutelaMatrixData[category.id] = {
+        categoryName: category.description,
+        entryTypes: {},
+        autoDescriptions: {},
+        sentenciaDescriptions: {}
+      };
+
+      // Inicializar tipos de entrada
+      entryTypes.forEach(entryType => {
+        tutelaMatrixData[category.id].entryTypes[entryType.id] = 0;
+      });
+
+      // Inicializar descripciones de auto
+      tutelaAutoDescriptions.forEach(autoDesc => {
+        tutelaMatrixData[category.id].autoDescriptions[autoDesc.id] = 0;
+      });
+
+      // Inicializar descripciones de sentencia
+      tutelaSentenciaDescriptions.forEach(sentenciaDesc => {
+        tutelaMatrixData[category.id].sentenciaDescriptions[sentenciaDesc.id] = 0;
+      });
+    });
+
+    // Contar procesos por categoría y tipo de entrada
+    tutelaTrials.forEach(trial => {
+      if (trial.categoryId && tutelaMatrixData[trial.categoryId]) {
+        // Contar por tipo de entrada
+        if (trial.entryTypeId) {
+          tutelaMatrixData[trial.categoryId].entryTypes[trial.entryTypeId] = 
+            (tutelaMatrixData[trial.categoryId].entryTypes[trial.entryTypeId] || 0) + 1;
+        }
+      }
+    });
+
+    // Contar actuaciones por categoría
+    tutelaTrials.forEach(trial => {
+      if (trial.categoryId && tutelaMatrixData[trial.categoryId] && trial.actions) {
+        trial.actions.forEach(action => {
+          const descriptionAction = action.descriptionAction;
+          if (!descriptionAction) return;
+
+          const typeActionName = descriptionAction.typeAction?.description?.toLowerCase() || "";
+          const isAuto = typeActionName.includes("auto");
+          const isSentencia = typeActionName.includes("sentencia");
+
+          if (isAuto && descriptionAction.id) {
+            if (tutelaMatrixData[trial.categoryId].autoDescriptions[descriptionAction.id] !== undefined) {
+              tutelaMatrixData[trial.categoryId].autoDescriptions[descriptionAction.id] = 
+                (tutelaMatrixData[trial.categoryId].autoDescriptions[descriptionAction.id] || 0) + 1;
+            }
+          } else if (isSentencia && descriptionAction.id) {
+            if (tutelaMatrixData[trial.categoryId].sentenciaDescriptions[descriptionAction.id] !== undefined) {
+              tutelaMatrixData[trial.categoryId].sentenciaDescriptions[descriptionAction.id] = 
+                (tutelaMatrixData[trial.categoryId].sentenciaDescriptions[descriptionAction.id] || 0) + 1;
+            }
+          }
+        });
+      }
+    });
+
     return {
       totalTrials: trials.length,
       totalPeople: people.length,
@@ -164,7 +258,12 @@ export const getStatisticsService = async (startDate, endDate) => {
       trials: trials,
       matrixData: matrixData, 
       entryTypes: entryTypes, 
-      autoDescriptions: autoDescriptions
+      autoDescriptions: autoDescriptions,
+      tutelaMatrixData: tutelaMatrixData,
+      tutelaCategories: tutelaCategories,
+      tutelaEntryTypes: entryTypes,
+      tutelaAutoDescriptions: tutelaAutoDescriptions,
+      tutelaSentenciaDescriptions: tutelaSentenciaDescriptions
     };
   } catch (error) {
     console.error("Error en getStatisticsService:", error);

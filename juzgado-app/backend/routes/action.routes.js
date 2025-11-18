@@ -3,15 +3,15 @@ import { addAction, editAction, searchActions, deleteAction, getActionsByTrial, 
 
 const router = Router();
 
-router.post("/add", addAction);
-router.post("/edit", editAction);
-router.get("/search", searchActions);
-router.get("/trial/:trialId", getActionsByTrial);
-router.get("/description-actions", getAllDescriptionActions);
-router.get("/type-actions", getAllTypeActions);
-router.post("/description-action/add", addDescriptionAction);
-router.post("/description-action/edit", editDescriptionAction);
-router.delete("/description-action/:id", deleteDescriptionAction);
-router.delete("/:id", deleteAction);
+router.post("/add", authMiddleware, addAction);
+router.post("/edit", authMiddleware, editAction);
+router.get("/search", authMiddleware, searchActions);
+router.get("/trial/:trialId", authMiddleware, getActionsByTrial);
+router.get("/description-actions", authMiddleware, getAllDescriptionActions);
+router.get("/type-actions", authMiddleware, getAllTypeActions);
+router.post("/description-action/add", authMiddleware, addDescriptionAction);
+router.post("/description-action/edit", authMiddleware, editDescriptionAction);
+router.delete("/description-action/:id", authMiddleware, deleteDescriptionAction);
+router.delete("/:id", authMiddleware, deleteAction);
 
 export default router;

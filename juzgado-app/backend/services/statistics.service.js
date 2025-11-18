@@ -121,8 +121,7 @@ export const getStatisticsService = async (startDate, endDate) => {
     });
 
     ejecutivoOrdinarioTrials.forEach(trial => {
-      if (trial.categoryId && matrixData[trial.categoryId]) {
-        // Contar por tipo de entrada
+      if (trial.categoryId && matrixData[trial.categoryId]) {   
         if (trial.entryTypeId) {
           matrixData[trial.categoryId].entryTypes[trial.entryTypeId] = 
             (matrixData[trial.categoryId].entryTypes[trial.entryTypeId] || 0) + 1;
@@ -153,13 +152,11 @@ export const getStatisticsService = async (startDate, endDate) => {
       }
     });
 
-    // Matriz de Tutela: Filas = Categorías, Columnas = Tipos de entrada + Descripciones de auto + Sentencias
     const tutelaType = await trialRepository.findTypeTrialByName("Tutela");
     const tutelaCategories = tutelaType 
       ? await trialRepository.findCategoriesByTypeTrialId(tutelaType.id)
       : [];
 
-    // Obtener descripciones de actuación para Tutela (autos y sentencias)
     const tutelaAutoDescriptions = descriptionActions.filter(da => {
       const typeActionName = da.typeAction?.description?.toLowerCase() || "";
       const isAuto = typeActionName.includes("auto");
@@ -176,16 +173,13 @@ export const getStatisticsService = async (startDate, endDate) => {
       return isSentencia && isTutela;
     });
 
-    // Filtrar procesos de Tutela
     const tutelaTrials = trials.filter(trial => {
       const typeName = trial.typeTrial?.name?.toLowerCase();
       return typeName === "tutela";
     });
 
-    // Crear matriz de Tutela: filas = categorías, columnas = entryTypes + autoDescriptions + sentenciaDescriptions
     const tutelaMatrixData = {};
 
-    // Inicializar filas (categorías)
     tutelaCategories.forEach(category => {
       tutelaMatrixData[category.id] = {
         categoryName: category.description,
@@ -194,34 +188,28 @@ export const getStatisticsService = async (startDate, endDate) => {
         sentenciaDescriptions: {}
       };
 
-      // Inicializar tipos de entrada
       entryTypes.forEach(entryType => {
         tutelaMatrixData[category.id].entryTypes[entryType.id] = 0;
       });
 
-      // Inicializar descripciones de auto
       tutelaAutoDescriptions.forEach(autoDesc => {
         tutelaMatrixData[category.id].autoDescriptions[autoDesc.id] = 0;
       });
 
-      // Inicializar descripciones de sentencia
       tutelaSentenciaDescriptions.forEach(sentenciaDesc => {
         tutelaMatrixData[category.id].sentenciaDescriptions[sentenciaDesc.id] = 0;
       });
     });
 
-    // Contar procesos por categoría y tipo de entrada
     tutelaTrials.forEach(trial => {
       if (trial.categoryId && tutelaMatrixData[trial.categoryId]) {
-        // Contar por tipo de entrada
         if (trial.entryTypeId) {
           tutelaMatrixData[trial.categoryId].entryTypes[trial.entryTypeId] = 
             (tutelaMatrixData[trial.categoryId].entryTypes[trial.entryTypeId] || 0) + 1;
         }
       }
     });
-
-    // Contar actuaciones por categoría
+    
     tutelaTrials.forEach(trial => {
       if (trial.categoryId && tutelaMatrixData[trial.categoryId] && trial.actions) {
         trial.actions.forEach(action => {

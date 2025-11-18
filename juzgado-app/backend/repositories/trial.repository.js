@@ -1,7 +1,6 @@
 import { prisma } from "../config/db.js";
 import { Status } from "@prisma/client";
 
-// Operaciones para Trial
 export const findTrialById = async (id) => {
   return await prisma.trial.findUnique({ where: { id } });
 };
@@ -96,7 +95,6 @@ export const searchTrials = async (whereClause) => {
   });
 };
 
-// Operaciones para TypeTrial
 export const findTypeTrialById = async (id) => {
   return await prisma.typeTrial.findUnique({ where: { id } });
 };
@@ -125,7 +123,6 @@ export const findAllTypeTrials = async () => {
   });
 };
 
-// Operaciones para Category
 export const findCategoriesByTypeTrialId = async (typeTrialId) => {
   return await prisma.category.findMany({
     where: {
@@ -137,7 +134,6 @@ export const findCategoriesByTypeTrialId = async (typeTrialId) => {
   });
 };
 
-// Operaciones para EntryType
 export const findAllEntryTypes = async () => {
   return await prisma.entryType.findMany({
     orderBy: {

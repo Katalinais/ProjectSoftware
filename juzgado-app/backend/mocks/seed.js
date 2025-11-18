@@ -3,15 +3,10 @@ import { generatePeopleMocks } from "./people.mock.js";
 import { generateTrialsMocks } from "./trials.mock.js";
 import { generateActionsMocks } from "./actions.mock.js";
 
-/**
- * Script para poblar la base de datos con datos mock
- * Uso: node mocks/seed.js
- */
 const seedDatabase = async () => {
   try {
     console.log("🌱 Iniciando seed de la base de datos...\n");
 
-    // 1. Obtener datos existentes necesarios
     console.log("📋 Obteniendo datos existentes...");
     const typeTrials = await prisma.typeTrial.findMany();
     const categories = await prisma.category.findMany();
@@ -65,17 +60,15 @@ const seedDatabase = async () => {
     }
     console.log(`✅ ${descriptionActions.length} descripciones de acción disponibles`);
 
-    // 4. Generar y crear procesos (en dos fases para respetar reglas de negocio)
     console.log("\n⚖️  Generando procesos...");
     
-    // Fase 1: Crear procesos normales (incluyendo Tutelas)
     const trialsMocks = generateTrialsMocks(
       createdPeople.length > 0 ? createdPeople : await prisma.person.findMany({ take: 10 }),
       typeTrials,
       categories,
       entryTypes,
-      20, // Crear menos en primera fase
-      [] // Sin procesos existentes aún
+      20,
+      []
     );
     
     const createdTrials = [];
@@ -99,7 +92,6 @@ const seedDatabase = async () => {
     }
     console.log(`✅ ${createdTrials.length} procesos creados (primera fase)`);
 
-    // Fase 2: Crear Incidentes de desacato basados en Tutelas existentes
     const desacatoType = typeTrials.find(tt => tt.name.toLowerCase() === "incidente de desacato");
     const tutelaType = typeTrials.find(tt => tt.name.toLowerCase() === "tutela");
     
@@ -108,7 +100,6 @@ const seedDatabase = async () => {
       
       if (tutelaTrials.length > 0) {
         console.log("\n⚖️  Generando Incidentes de desacato...");
-        // Normalizar las Tutelas para que tengan typeTrialId y todos los campos necesarios
         const normalizedTutelas = tutelaTrials.map(t => ({
           id: t.id,
           number: t.number,
@@ -121,8 +112,8 @@ const seedDatabase = async () => {
           typeTrials,
           categories,
           entryTypes,
-          Math.min(5, tutelaTrials.length), // Crear hasta 5 incidentes o el número de tutelas disponibles
-          normalizedTutelas // Pasar Tutelas existentes normalizadas
+          Math.min(5, tutelaTrials.length),
+          normalizedTutelas
         );
         
         for (const trial of desacatoMocks) {
@@ -149,10 +140,8 @@ const seedDatabase = async () => {
     
     console.log(`✅ Total: ${createdTrials.length} procesos creados`);
 
-    // 5. Generar y crear actuaciones
     console.log("\n📄 Generando actuaciones...");
     
-    // Obtener procesos con sus tipos incluidos
     const trialsWithTypes = createdTrials.length > 0 
       ? createdTrials 
       : await prisma.trial.findMany({ 
@@ -167,7 +156,6 @@ const seedDatabase = async () => {
           }
         });
     
-    // Obtener descripciones con sus tipos incluidos
     const descriptionsWithTypes = await prisma.descriptionAction.findMany({
       include: {
         typeTrial: {
@@ -212,7 +200,6 @@ const seedDatabase = async () => {
   }
 };
 
-// Ejecutar si se llama directamente
 const isMainModule = process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/\\/g, '/'));
 if (isMainModule || process.argv[1]?.includes('seed.js')) {
   seedDatabase()

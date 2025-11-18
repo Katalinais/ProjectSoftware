@@ -2,6 +2,8 @@
 
 Sistema web para la gestión integral de procesos judiciales, personas, actuaciones y estadísticas del juzgado.
 
+🌐 **Aplicación en producción**: [juridia.com](https://juridia.com)
+
 ## 🚀 Características
 
 - **Gestión de Procesos**: Crear, editar y gestionar procesos legales con diferentes tipos (Ordinario, Ejecutivo, Tutela, etc.)
@@ -111,21 +113,42 @@ npm start
 
 La aplicación está desplegada en producción de la siguiente manera:
 
-- **Frontend**: [Vercel](https://vercel.com) (Next.js)
-- **Backend**: [Vercel](https://vercel.com) / [Railway](https://railway.app)
+- **Frontend**: [Vercel](https://vercel.com) - [juridia.com](https://juridia.com)
+- **Backend**: [Render](https://render.com)
 - **Base de datos**: [Supabase](https://supabase.com) PostgreSQL
 
 ### Configuración de Producción
 
-Para el despliegue en producción, asegúrate de configurar las siguientes variables de entorno:
+#### Vercel (Frontend)
 
-**Backend:**
-- `DATABASE_URL`: URL de conexión a Supabase PostgreSQL
+Configurar en: **Settings → Environment Variables**
+
+- `NEXT_PUBLIC_API_URL`: URL del backend en Render (ej: `https://tu-backend.onrender.com`)
+
+**Nota**: Después de agregar variables de entorno, es necesario hacer un nuevo deploy.
+
+#### Render (Backend)
+
+Configurar en: **Environment tab**
+
+- `PORT`: 4000 (o el puerto asignado por Render)
+- `FRONTEND_URL`: `https://juridia.com`
 - `JWT_SECRET`: Clave secreta para JWT (generar una clave segura)
-- `PORT`: Puerto del servidor (generalmente asignado automáticamente por la plataforma)
+- `DATABASE_URL`: URL de conexión de Supabase PostgreSQL
 
-**Frontend:**
-- Configurar la URL del backend en las peticiones API
+**Nota**: Render reinicia automáticamente el servicio después de cambiar variables de entorno.
+
+#### Supabase (Base de Datos)
+
+La URL de conexión se encuentra en: **Settings → Database → Connection string**
+
+Formato: `postgresql://[user]:[password]@[host]:[port]/[database]`
+
+### CORS
+
+El backend está configurado para aceptar requests desde:
+- **Producción**: `https://juridia.com` (configurado en `FRONTEND_URL` en Render)
+- **Desarrollo**: `http://localhost:3000` (fallback si no está configurado `FRONTEND_URL`)
 
 ## 📁 Estructura del Proyecto
 
@@ -188,12 +211,6 @@ Esto generará:
 ### Frontend
 
 No requiere variables de entorno adicionales. El backend debe estar en `http://localhost:4000`.
-
-## 🤝 Contribuir
-
-1. Crear una rama para la nueva funcionalidad
-2. Realizar los cambios
-3. Crear un Pull Request con descripción detallada
 
 ## 📄 Licencia
 

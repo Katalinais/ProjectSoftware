@@ -260,6 +260,8 @@ export default function PersonasModule() {
             onClick={() => {
               if (showForm && editingPerson) {
                 setEditingPerson(null)
+                setFormData({ nombre: "", tipoDocumento: "Cédula", numeroDocumento: "" })
+                setError("")
               }
               setShowForm(!showForm)
               if (!showForm) {
@@ -273,19 +275,21 @@ export default function PersonasModule() {
           </Button>
         </div>
 
+        {/* Formulario */}
         {showForm && (
-          <form onSubmit={handleSubmit} className="bg-slate-50 p-6 rounded-lg mb-6">
+          <div className="mb-6">
+          <form onSubmit={handleSubmit} className="bg-slate-50 p-6 rounded-lg border border-slate-200">
             {editingPerson && (
               <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <p className="text-blue-800 font-medium">Modo edición</p>
+                <p className="text-blue-800 font-medium">✏️ Modo edición: {editingPerson.name}</p>
               </div>
             )}
             {error && (
               <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
                 {error}
-              </div>
+        </div>
             )}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">Nombre</label>
                 <input
@@ -311,7 +315,7 @@ export default function PersonasModule() {
                 </select>
               </div>
 
-              <div className="md:col-span-2">
+              <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">Número de Documento</label>
                 <input
                   type="text"
@@ -326,26 +330,42 @@ export default function PersonasModule() {
               </div>
             </div>
 
+            <div className="flex gap-3 mt-4">
             <Button
               type="submit"
-              disabled={loading}
-              className="mt-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg w-full disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? "Guardando..." : editingPerson ? "Actualizar Persona" : "Guardar Persona"}
+                disabled={loading}
+                className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? "Guardando..." : editingPerson ? "Actualizar Persona" : "Guardar Persona"}
+              </Button>
+              {editingPerson && (
+                <Button
+                  type="button"
+                  onClick={() => {
+                    setEditingPerson(null)
+                    setFormData({ nombre: "", tipoDocumento: "Cédula", numeroDocumento: "" })
+                    setError("")
+                  }}
+                  className="bg-slate-500 hover:bg-slate-600 text-white px-4 py-2 rounded-lg"
+                >
+                  Cancelar Edición
             </Button>
+              )}
+            </div>
           </form>
+          </div>
         )}
 
         {/* Búsqueda */}
         <div className="mb-6">
           <div className="relative">
-            <input
-              type="text"
+          <input
+            type="text"
               placeholder="Buscar por nombre, tipo de documento o número de documento..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
             {searchLoading && (
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
@@ -376,10 +396,7 @@ export default function PersonasModule() {
               {searchLoading ? (
                 <tr>
                   <td colSpan={4} className="px-4 py-6 text-center text-slate-500">
-                    <div className="flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mr-2"></div>
-                      Buscando...
-                    </div>
+                    Buscando...
                   </td>
                 </tr>
               ) : displayedPersonas.length > 0 ? (
@@ -402,12 +419,6 @@ export default function PersonasModule() {
                             disabled={!originalPerson}
                           >
                             Editar
-                          </Button>
-                          <Button
-                            onClick={() => deletePersona(persona.id)}
-                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
-                          >
-                            Eliminar
                           </Button>
                         </div>
                       </td>

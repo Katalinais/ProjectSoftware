@@ -589,7 +589,7 @@ export default function ProcesosModule() {
       fecha: new Date(trial.arrivalDate).toISOString().split('T')[0],
       categoria: trial.category?.id || "",
       categoriaDescripcion: trial.category?.description || "",
-      entryTypeId: "", // Necesitaríamos cargar esto desde el backend
+      entryTypeId: "",
       plaintiffId: trial.plaintiff.id,
       plaintiffName: trial.plaintiff.name,
       defendantId: trial.defendant.id,

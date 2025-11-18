@@ -13,7 +13,7 @@ export const generateTrialsMocks = (people = [], typeTrials = [], categories = [
   }
 
   const statuses = [Status.PRIMERA_INSTANCIA, Status.SEGUNDA_INSTANCIA, Status.ARCHIVADO];
-  const years = [2020, 2021, 2022, 2023, 2024];
+  const years = [20204, 2025];
   const months = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
   
   const trials = [];

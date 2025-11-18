@@ -27,7 +27,6 @@ export default function Dashboard() {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* Mobile Menu Button */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
         className="fixed top-4 left-4 z-50 md:hidden bg-slate-900 text-white p-2 rounded-lg shadow-lg"
@@ -35,7 +34,6 @@ export default function Dashboard() {
         {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
       </button>
 
-      {/* Sidebar Overlay (Mobile) */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
@@ -50,8 +48,19 @@ export default function Dashboard() {
         }`}
       >
         <div className="p-6 border-b border-slate-700">
-          <h2 className="text-xl font-bold">Sistema Legal</h2>
-          <p className="text-sm text-slate-400 mt-1">{user?.name}</p>
+          <div className="flex items-center gap-3 mb-3">
+            <img 
+              src="/logo.svg" 
+              alt="Logo" 
+              className="h-10 w-auto object-contain brightness-0 invert"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement
+                target.src = "/icon.svg"
+              }}
+            />
+            <h2 className="text-xl font-bold">Sistema Legal</h2>
+          </div>
+          <p className="text-sm text-slate-400">{user?.name}</p>
         </div>
 
         <nav className="p-4 flex-grow overflow-y-auto">
@@ -87,11 +96,24 @@ export default function Dashboard() {
       <main className="flex-1 p-4 md:p-8 md:ml-64 min-h-screen">
         {currentModule === "inicio" && (
           <div className="bg-white rounded-lg shadow-md p-8">
-            <h1 className="text-4xl font-bold text-slate-900 mb-4">Bienvenido, {user?.name}</h1>
-            <p className="text-slate-600 text-lg mb-6">
-              Selecciona un módulo del menú lateral para comenzar a trabajar con el sistema de gestión de procesos
-              legales.
-            </p>
+            <div className="flex items-center gap-6 mb-6">
+              <img 
+                src="/logo.svg" 
+                alt="Logo" 
+                className="h-28 w-auto object-contain"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement
+                  target.src = "/icon.svg"
+                }}
+              />
+              <div>
+                <h1 className="text-4xl font-bold text-slate-900 mb-2">Bienvenido, {user?.name}</h1>
+                <p className="text-slate-600 text-lg">
+                  Selecciona un módulo del menú lateral para comenzar a trabajar con el sistema de gestión de procesos
+                  legales.
+                </p>
+              </div>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {modules.slice(1).map((module) => (
                 <button

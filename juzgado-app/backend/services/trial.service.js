@@ -129,7 +129,7 @@ export const searchTrialsService = async (searchTerm, filterType) => {
   if (filterType && filterType.trim() !== "") {
     const typeMapping = {
       "Tutela": "Tutela",
-      "Ordinario": "Laboral",
+      "Ordinario": "Ordinario", 
       "Habeas corpus": "Habeas corpus",
       "Incidente de desacato": "Incidente de desacato"
     };
@@ -152,7 +152,7 @@ export const getCategoriesByTrialTypeService = async (trialTypeName) => {
   try {
     const typeMapping = {
       "Tutela": "Tutela",
-      "Ordinario": "Laboral", 
+      "Ordinario": "Ordinario", 
       "Habeas corpus": "Habeas corpus",
       "Incidente de desacato": "Tutela",
       "Laboral": "Laboral"

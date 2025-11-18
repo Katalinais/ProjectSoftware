@@ -64,48 +64,72 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-2xl shadow-lg w-96"
-      >
-        <h1 className="text-3xl font-bold mb-6 text-center text-blue-700">
-          Ingreso al Sistema Judicial
-        </h1>
-
-        <label className="block mb-2 text-sm font-medium text-gray-700">
-          Usuario
-        </label>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Ingresa tu usuario"
-          className="border border-gray-300 rounded w-full mb-4 p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        />
-
-        <label className="block mb-2 text-sm font-medium text-gray-700">
-          Contraseña
-        </label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Ingresa tu contraseña"
-          className="border border-gray-300 rounded w-full mb-4 p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        />
-
-        {error && (
-          <p className="text-red-600 text-center text-sm mb-3">{error}</p>
-        )}
-
-        <button
-          type="submit"
-          className="bg-blue-600 text-white rounded w-full py-2 hover:bg-blue-700 transition"
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
+      <div className="w-full max-w-md">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white p-10 rounded-3xl shadow-2xl border border-slate-100"
         >
-          Iniciar Sesión
-        </button>
-      </form>
+          <div className="flex flex-col items-center mb-8">
+            <img 
+              src="/logo.svg" 
+              alt="Logo" 
+              className="h-32 w-auto object-contain mb-6 drop-shadow-lg"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement
+                target.src = "/icon.svg"
+              }}
+            />
+            <h1 className="text-3xl font-bold text-center text-slate-800 mb-2">
+              Sistema Judicial
+            </h1>
+            <p className="text-slate-600 text-sm text-center">
+              Ingresa tus credenciales para continuar
+            </p>
+          </div>
+
+          <div className="space-y-5">
+            <div>
+              <label className="block mb-2 text-sm font-semibold text-slate-700">
+                Usuario
+              </label>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Ingresa tu usuario"
+                className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-slate-800 placeholder:text-slate-400"
+              />
+            </div>
+
+            <div>
+              <label className="block mb-2 text-sm font-semibold text-slate-700">
+                Contraseña
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Ingresa tu contraseña"
+                className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-slate-800 placeholder:text-slate-400"
+              />
+            </div>
+
+            {error && (
+              <div className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-3 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+            >
+              Iniciar Sesión
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }

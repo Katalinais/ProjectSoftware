@@ -4,6 +4,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
+import { handleProcessNumberChange } from "@/lib/utils"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import {
   AlertDialog,
@@ -586,9 +587,10 @@ export default function ActuacionesModule() {
                   type="text"
                   value={trialSearchTerm}
                   onChange={(e) => {
-                    setTrialSearchTerm(e.target.value)
+                    const formattedValue = handleProcessNumberChange(e.target.value)
+                    setTrialSearchTerm(formattedValue)
                     setShowTrialResults(true)
-                    if (!e.target.value) {
+                    if (!formattedValue) {
                       setSelectedTrial(null)
                       setFormData({ ...formData, trialId: "" })
                     }
@@ -596,7 +598,8 @@ export default function ActuacionesModule() {
                   onFocus={() => {
                     if (trials.length > 0) setShowTrialResults(true)
                   }}
-                  placeholder="Buscar por número de proceso..."
+                  placeholder="Buscar por número de proceso (ej: 2024-00123)"
+                  maxLength={10}
                   className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 {loadingTrials && (

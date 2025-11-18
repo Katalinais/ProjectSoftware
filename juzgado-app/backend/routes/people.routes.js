@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { addPerson, editPerson, searchPeople } from "../controllers/people.controller.js";
+import { verifyToken } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
-router.post("/add", authMiddleware, addPerson);
-router.post("/edit", authMiddleware, editPerson);
-router.get("/search", authMiddleware, searchPeople);
+router.post("/add", verifyToken, addPerson);
+router.post("/edit", verifyToken, editPerson);
+router.get("/search", verifyToken, searchPeople);
 
 export default router;

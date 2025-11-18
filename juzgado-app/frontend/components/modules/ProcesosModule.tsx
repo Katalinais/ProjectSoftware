@@ -5,6 +5,7 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { useApp } from "@/contexts/AppContext"
 import { Button } from "@/components/ui/button"
+import { handleNameChange } from "@/lib/utils"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -390,6 +391,19 @@ export default function ProcesosModule() {
       return
     }
 
+    const selectedDate = new Date(formData.fecha)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    
+    if (selectedDate > today) {
+      setErrorDialog({
+        open: true,
+        title: "Fecha inválida",
+        message: "La fecha de entrada del proceso no puede ser futura. Por favor seleccione una fecha igual o anterior a la fecha actual."
+      })
+      return
+    }
+
     if (!isPagoPorConsignacion && !formData.categoria) {
       setErrorDialog({
         open: true,
@@ -725,7 +739,6 @@ export default function ProcesosModule() {
               }
               setShowForm(!showForm)
               if (!showForm) {
-                // Limpiar formulario al abrir
                 const defaultType = trialTypes.length > 0 ? trialTypes[0].name : ""
                 setFormData({ 
                   numero: "", 
@@ -814,7 +827,14 @@ export default function ProcesosModule() {
                 <input
                   type="date"
                   value={formData.fecha}
-                  onChange={(e) => setFormData({ ...formData, fecha: e.target.value })}
+                  max={new Date().toISOString().split('T')[0]}
+                  onChange={(e) => {
+                    const selectedDate = e.target.value
+                    const today = new Date().toISOString().split('T')[0]
+                    if (selectedDate <= today) {
+                      setFormData({ ...formData, fecha: selectedDate })
+                    }
+                  }}
                   className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -824,7 +844,7 @@ export default function ProcesosModule() {
                 const isPagoPorConsignacion = selectedTypeTrial?.name.toLowerCase() === "pagos por consignación" || selectedTypeTrial?.name.toLowerCase() === "pagos por consignacion"
                 
                 if (isPagoPorConsignacion) {
-                  return null // No mostrar el campo de categoría para "pago por consignación"
+                  return null
                 }
                 
                 return (
@@ -897,8 +917,12 @@ export default function ProcesosModule() {
                   type="text"
                   value={plaintiffSearch}
                   onChange={(e) => {
-                    setPlaintiffSearch(e.target.value)
-                    if (!e.target.value) {
+                    const value = e.target.value
+                    const filteredValue = /^\d/.test(value) 
+                      ? value.replace(/\D/g, '') 
+                      : handleNameChange(value)
+                    setPlaintiffSearch(filteredValue)
+                    if (!filteredValue) {
                       setFormData({ ...formData, plaintiffId: "", plaintiffName: "" })
                     }
                   }}
@@ -917,7 +941,7 @@ export default function ProcesosModule() {
                       <div
                         key={person.id}
                         onMouseDown={(e) => {
-                          e.preventDefault() // Prevenir el blur del input
+                          e.preventDefault()
                           setFormData({
                             ...formData,
                             plaintiffId: person.id,
@@ -949,8 +973,12 @@ export default function ProcesosModule() {
                   type="text"
                   value={defendantSearch}
                   onChange={(e) => {
-                    setDefendantSearch(e.target.value)
-                    if (!e.target.value) {
+                    const value = e.target.value
+                    const filteredValue = /^\d/.test(value) 
+                      ? value.replace(/\D/g, '') 
+                      : handleNameChange(value)
+                    setDefendantSearch(filteredValue)
+                    if (!filteredValue) {
                       setFormData({ ...formData, defendantId: "", defendantName: "" })
                     }
                   }}

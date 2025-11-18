@@ -5,6 +5,7 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { useApp } from "@/contexts/AppContext"
 import { Button } from "@/components/ui/button"
+import { handleNameChange } from "@/lib/utils"
 
 interface PersonaFromBackend {
   id: string
@@ -289,7 +290,7 @@ export default function PersonasModule() {
                 <input
                   type="text"
                   value={formData.nombre}
-                  onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, nombre: handleNameChange(e.target.value) })}
                   placeholder="Nombre completo"
                   className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required

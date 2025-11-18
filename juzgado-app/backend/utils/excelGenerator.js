@@ -113,6 +113,29 @@ export const generateStatisticsExcel = async (stats, startDate, endDate) => {
   tutelaMatrixSheet.addRow(["Período", dateRange]);
   tutelaMatrixSheet.addRow([""]);
 
+  // Fila de encabezados de grupo
+  const tutelaGroupHeaderRow = [""];
+  if (tutelaEntryTypes.length > 0) {
+    tutelaGroupHeaderRow.push("TIPOS DE ENTRADA");
+    for (let i = 1; i < tutelaEntryTypes.length; i++) {
+      tutelaGroupHeaderRow.push("");
+    }
+  }
+  if (tutelaAutoDescriptions.length > 0) {
+    tutelaGroupHeaderRow.push("DESCRIPCIONES DE AUTO");
+    for (let i = 1; i < tutelaAutoDescriptions.length; i++) {
+      tutelaGroupHeaderRow.push("");
+    }
+  }
+  if (tutelaSentenciaDescriptions.length > 0) {
+    tutelaGroupHeaderRow.push("DESCRIPCIONES DE SENTENCIA");
+    for (let i = 1; i < tutelaSentenciaDescriptions.length; i++) {
+      tutelaGroupHeaderRow.push("");
+    }
+  }
+  tutelaMatrixSheet.addRow(tutelaGroupHeaderRow);
+
+  // Fila de encabezados de columnas
   const tutelaHeaderRow = ["Categoría"];
   
   tutelaEntryTypes.forEach(entryType => {
@@ -135,7 +158,39 @@ export const generateStatisticsExcel = async (stats, startDate, endDate) => {
   const tutelaLastColumn = getColumnLetter(tutelaHeaderRow.length);
   tutelaMatrixSheet.mergeCells(`A1:${tutelaLastColumn}1`);
 
-  const tutelaHeaderRowObj = tutelaMatrixSheet.getRow(4);
+  // Estilo para la fila de encabezados de grupo (fila 4)
+  const tutelaGroupHeaderRowObj = tutelaMatrixSheet.getRow(4);
+  tutelaGroupHeaderRowObj.font = { bold: true, size: 11 };
+  tutelaGroupHeaderRowObj.fill = {
+    type: "pattern",
+    pattern: "solid",
+    fgColor: { argb: "FFE7E6E6" }
+  };
+  tutelaGroupHeaderRowObj.alignment = { horizontal: "center", vertical: "middle" };
+
+  // Fusionar celdas para los encabezados de grupo
+  let currentCol = 2; // Empezar en columna B (después de "Categoría")
+  if (tutelaEntryTypes.length > 0) {
+    const startCol = getColumnLetter(currentCol);
+    currentCol += tutelaEntryTypes.length;
+    const endCol = getColumnLetter(currentCol - 1);
+    tutelaMatrixSheet.mergeCells(`${startCol}4:${endCol}4`);
+  }
+  if (tutelaAutoDescriptions.length > 0) {
+    const startCol = getColumnLetter(currentCol);
+    currentCol += tutelaAutoDescriptions.length;
+    const endCol = getColumnLetter(currentCol - 1);
+    tutelaMatrixSheet.mergeCells(`${startCol}4:${endCol}4`);
+  }
+  if (tutelaSentenciaDescriptions.length > 0) {
+    const startCol = getColumnLetter(currentCol);
+    currentCol += tutelaSentenciaDescriptions.length;
+    const endCol = getColumnLetter(currentCol - 1);
+    tutelaMatrixSheet.mergeCells(`${startCol}4:${endCol}4`);
+  }
+
+  // Estilo para la fila de encabezados de columnas (fila 5)
+  const tutelaHeaderRowObj = tutelaMatrixSheet.getRow(5);
   tutelaHeaderRowObj.font = { bold: true, size: 11 };
   tutelaHeaderRowObj.fill = {
     type: "pattern",
@@ -176,9 +231,9 @@ export const generateStatisticsExcel = async (stats, startDate, endDate) => {
   tutelaMatrixSheet.views = [{
     state: "frozen",
     xSplit: 1,
-    ySplit: 4,
-    topLeftCell: "B5",
-    activeCell: "B5"
+    ySplit: 5,
+    topLeftCell: "B6",
+    activeCell: "B6"
   }];
 
   const summarySheet = workbook.addWorksheet("Resumen General");

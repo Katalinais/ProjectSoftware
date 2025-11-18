@@ -6,6 +6,7 @@ import { useState, useEffect } from "react"
 import { useApp } from "@/contexts/AppContext"
 import { Button } from "@/components/ui/button"
 import { handleNameChange } from "@/lib/utils"
+import { API_URL } from "@/lib/config"
 
 interface PersonaFromBackend {
   id: string
@@ -50,7 +51,7 @@ export default function PersonasModule() {
         
         // Si estamos editando, usar el endpoint de edición
         if (editingPerson) {
-          const response = await fetch("http://localhost:4000/people/edit", {
+          const response = await fetch(`${API_URL}/people/edit`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -72,7 +73,7 @@ export default function PersonasModule() {
             setShowForm(false)
             
             try {
-              const searchResponse = await fetch("http://localhost:4000/people/search", {
+              const searchResponse = await fetch(`${API_URL}/people/search`, {
                 method: "GET",
                 headers: {
                   "Content-Type": "application/json",
@@ -91,7 +92,7 @@ export default function PersonasModule() {
           }
         } else {
           // Crear nueva persona
-          const response = await fetch("http://localhost:4000/people/add", {
+          const response = await fetch(`${API_URL}/people/add`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -116,7 +117,7 @@ export default function PersonasModule() {
             setShowForm(false)
             
             try {
-              const searchResponse = await fetch("http://localhost:4000/people/search", {
+              const searchResponse = await fetch(`${API_URL}/people/search`, {
                 method: "GET",
                 headers: {
                   "Content-Type": "application/json",
@@ -154,7 +155,7 @@ export default function PersonasModule() {
       setSearchLoading(true)
       try {
         const token = localStorage.getItem("token")
-        const response = await fetch("http://localhost:4000/people/search", {
+        const response = await fetch(`${API_URL}/people/search`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -184,7 +185,7 @@ export default function PersonasModule() {
       const loadAll = async () => {
         try {
           const token = localStorage.getItem("token")
-          const response = await fetch("http://localhost:4000/people/search", {
+          const response = await fetch(`${API_URL}/people/search`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -212,7 +213,7 @@ export default function PersonasModule() {
       try {
         const token = localStorage.getItem("token")
         const response = await fetch(
-          `http://localhost:4000/people/search?searchTerm=${encodeURIComponent(searchTerm)}`,
+          `${API_URL}/people/search?searchTerm=${encodeURIComponent(searchTerm)}`,
           {
             method: "GET",
             headers: {

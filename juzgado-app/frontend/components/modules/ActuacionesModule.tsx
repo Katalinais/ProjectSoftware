@@ -5,6 +5,7 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { handleProcessNumberChange } from "@/lib/utils"
+import { API_URL } from "@/lib/config"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import {
   AlertDialog,
@@ -96,7 +97,7 @@ export default function ActuacionesModule() {
       try {
         const token = localStorage.getItem("token")
         const response = await fetch(
-          `http://localhost:4000/action/type-actions`,
+          `${API_URL}/action/type-actions`,
           {
             method: "GET",
             headers: {
@@ -141,7 +142,7 @@ export default function ActuacionesModule() {
       try {
         const token = localStorage.getItem("token")
         const response = await fetch(
-          `http://localhost:4000/trial/search?searchTerm=${encodeURIComponent(trialSearchTerm)}`,
+          `${API_URL}/trial/search?searchTerm=${encodeURIComponent(trialSearchTerm)}`,
           {
             method: "GET",
             headers: {
@@ -190,8 +191,8 @@ export default function ActuacionesModule() {
         const token = localStorage.getItem("token")
         // Si hay un proceso seleccionado, filtrar por su tipo de proceso
         const url = selectedTrial 
-          ? `http://localhost:4000/action/description-actions?typeTrialId=${selectedTrial.typeTrial.id}`
-          : `http://localhost:4000/action/description-actions`
+          ? `${API_URL}/action/description-actions?typeTrialId=${selectedTrial.typeTrial.id}`
+          : `${API_URL}/action/description-actions`
         
         const response = await fetch(url, {
           method: "GET",
@@ -225,7 +226,7 @@ export default function ActuacionesModule() {
       try {
         const token = localStorage.getItem("token")
         const response = await fetch(
-          `http://localhost:4000/action/search`,
+          `${API_URL}/action/search`,
           {
             method: "GET",
             headers: {
@@ -318,7 +319,7 @@ export default function ActuacionesModule() {
       // Si estamos editando, usar el endpoint de edición
       if (editingAction) {
         const response = await fetch(
-          `http://localhost:4000/action/edit`,
+          `${API_URL}/action/edit`,
           {
             method: "POST",
             headers: {
@@ -351,7 +352,7 @@ export default function ActuacionesModule() {
           const loadActions = async () => {
             const token = localStorage.getItem("token")
             const response = await fetch(
-              `http://localhost:4000/action/search`,
+              `${API_URL}/action/search`,
               {
                 method: "GET",
                 headers: {
@@ -394,7 +395,7 @@ export default function ActuacionesModule() {
         }
         
         const response = await fetch(
-          `http://localhost:4000/action/add`,
+          `${API_URL}/action/add`,
           {
             method: "POST",
             headers: {
@@ -420,7 +421,7 @@ export default function ActuacionesModule() {
           const loadActions = async () => {
             const token = localStorage.getItem("token")
             const response = await fetch(
-              `http://localhost:4000/action/search`,
+              `${API_URL}/action/search`,
               {
                 method: "GET",
                 headers: {
@@ -462,7 +463,7 @@ export default function ActuacionesModule() {
     try {
       const token = localStorage.getItem("token")
       const response = await fetch(
-        `http://localhost:4000/action/${id}`,
+        `${API_URL}/action/${id}`,
         {
           method: "DELETE",
           headers: {

@@ -5,6 +5,7 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { API_URL } from "@/lib/config"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -64,7 +65,7 @@ export default function DescripcionesModule() {
       try {
         const token = localStorage.getItem("token")
         const response = await fetch(
-          `http://localhost:4000/action/type-actions`,
+          `${API_URL}/action/type-actions`,
           {
             method: "GET",
             headers: {
@@ -106,7 +107,7 @@ export default function DescripcionesModule() {
       try {
         const token = localStorage.getItem("token")
         const response = await fetch(
-          `http://localhost:4000/trial/types`,
+          `${API_URL}/trial/types`,
           {
             method: "GET",
             headers: {
@@ -138,7 +139,7 @@ export default function DescripcionesModule() {
       try {
         const token = localStorage.getItem("token")
         const response = await fetch(
-          `http://localhost:4000/action/description-actions`,
+          `${API_URL}/action/description-actions`,
           {
             method: "GET",
             headers: {
@@ -187,7 +188,7 @@ export default function DescripcionesModule() {
       // Si estamos editando, usar el endpoint de edición
       if (editingDescription) {
         const response = await fetch(
-          `http://localhost:4000/action/description-action/edit`,
+          `${API_URL}/action/description-action/edit`,
           {
             method: "POST",
             headers: {
@@ -207,7 +208,7 @@ export default function DescripcionesModule() {
 
         if (response.ok) {
           const reloadResponse = await fetch(
-            `http://localhost:4000/action/description-actions`,
+            `${API_URL}/action/description-actions`,
             {
               method: "GET",
               headers: {
@@ -235,7 +236,7 @@ export default function DescripcionesModule() {
         }
       } else {
         // Crear nueva descripción
-        const response = await fetch("http://localhost:4000/action/description-action/add", {
+        const response = await fetch(`${API_URL}/action/description-action/add`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -252,7 +253,7 @@ export default function DescripcionesModule() {
 
         if (response.ok) {
           const reloadResponse = await fetch(
-            `http://localhost:4000/action/description-actions`,
+            `${API_URL}/action/description-actions`,
             {
               method: "GET",
               headers: {
@@ -298,7 +299,7 @@ export default function DescripcionesModule() {
 
     try {
       const token = localStorage.getItem("token")
-      const response = await fetch(`http://localhost:4000/action/description-action/${id}`, {
+      const response = await fetch(`${API_URL}/action/description-action/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -308,7 +309,7 @@ export default function DescripcionesModule() {
 
       if (response.ok) {
         const reloadResponse = await fetch(
-          `http://localhost:4000/action/description-actions`,
+          `${API_URL}/action/description-actions`,
           {
             method: "GET",
             headers: {

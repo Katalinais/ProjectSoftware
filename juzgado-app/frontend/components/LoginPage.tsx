@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useApp } from "@/contexts/AppContext"
+import { API_URL } from "@/lib/config"
 
 export default function LoginPage() {
   const { login } = useApp()
@@ -15,12 +16,12 @@ export default function LoginPage() {
       if (!token) return
 
       try {
-        const res = await fetch("http://localhost:4000/auth/login", {
+        const res = await fetch(`${API_URL}/auth/login`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         if (res.ok) {
           const data = await res.json()
-          // Usar el nombre del usuario del backend o el username
+
           login(data.user?.name || data.username || "Usuario")
         } else {
           localStorage.removeItem("token")
@@ -31,7 +32,6 @@ export default function LoginPage() {
       }
     }
     verifyToken()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -39,8 +39,7 @@ export default function LoginPage() {
     setError("")
 
     try {
-      // Intentar autenticarse con el backend
-      const res = await fetch("http://localhost:4000/auth/login", {
+      const res = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
@@ -50,13 +49,11 @@ export default function LoginPage() {
 
       if (res.ok) {
         localStorage.setItem("token", data.token)
-        // Usar el nombre del usuario del backend o el username
         login(data.user?.name || data.username || username)
       } else {
         setError(data.message || "Credenciales incorrectas")
       }
     } catch (err) {
-      // Si el backend no está disponible, permitir login local
       console.warn("Backend no disponible, usando autenticación local:", err)
       if (username.trim()) {
         login(username)

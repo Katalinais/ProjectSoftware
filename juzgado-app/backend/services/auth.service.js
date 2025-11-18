@@ -1,26 +1,24 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { prisma } from "../config/db.js";
+import * as authRepository from "../repositories/auth.repository.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export const registerAdminService = async (username, password) => {
-  const existing = await prisma.user.findUnique({ where: { username } });
+  const existing = await authRepository.findUserByUsername(username);
   if (existing) {
     throw new Error("El usuario ya existe");
   }
 
   const hashedPassword = await bcrypt.hash(password, 12);
 
-  await prisma.user.create({
-    data: { username, password: hashedPassword }
-  });
+  await authRepository.createUser(username, hashedPassword);
 
   return { message: "Usuario admin creado correctamente ✅" };
 };
 
 export const loginAdminService = async (username, password) => {
-  const user = await prisma.user.findUnique({ where: { username } });
+  const user = await authRepository.findUserByUsername(username);
   if (!user) {
     throw new Error("Usuario o contraseña incorrectos");
   }

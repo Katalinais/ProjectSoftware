@@ -6,6 +6,7 @@ import { useState, useEffect } from "react"
 import { useApp } from "@/contexts/AppContext"
 import { Button } from "@/components/ui/button"
 import { handleNameChange } from "@/lib/utils"
+import { API_URL } from "@/lib/config"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -121,7 +122,7 @@ export default function ProcesosModule() {
       try {
         const token = localStorage.getItem("token")
         const response = await fetch(
-          `http://localhost:4000/trial/types`,
+          `${API_URL}/trial/types`,
           {
             method: "GET",
             headers: {
@@ -154,14 +155,13 @@ export default function ProcesosModule() {
     loadTrialTypes()
   }, [])
 
-  // Cargar tipos de entrada desde el backend
   useEffect(() => {
     const loadEntryTypes = async () => {
       setLoadingEntryTypes(true)
       try {
         const token = localStorage.getItem("token")
         const response = await fetch(
-          `http://localhost:4000/trial/entry-types`,
+          `${API_URL}/trial/entry-types`,
           {
             method: "GET",
             headers: {
@@ -204,7 +204,7 @@ export default function ProcesosModule() {
         if (filterType) params.append("filterType", filterType)
 
         const response = await fetch(
-          `http://localhost:4000/trial/search?${params.toString()}`,
+          `${API_URL}/trial/search?${params.toString()}`,
           {
             method: "GET",
             headers: {
@@ -258,7 +258,7 @@ export default function ProcesosModule() {
       try {
         const token = localStorage.getItem("token")
         const response = await fetch(
-          `http://localhost:4000/trial/categories?trialType=${encodeURIComponent(formData.tipo)}`,
+          `${API_URL}/trial/categories?trialType=${encodeURIComponent(formData.tipo)}`,
           {
             method: "GET",
             headers: {
@@ -301,7 +301,7 @@ export default function ProcesosModule() {
       try {
         const token = localStorage.getItem("token")
         const response = await fetch(
-          `http://localhost:4000/people/search?searchTerm=${encodeURIComponent(plaintiffSearch)}`,
+          `${API_URL}/people/search?searchTerm=${encodeURIComponent(plaintiffSearch)}`,
           {
             method: "GET",
             headers: {
@@ -345,7 +345,7 @@ export default function ProcesosModule() {
       try {
         const token = localStorage.getItem("token")
         const response = await fetch(
-          `http://localhost:4000/people/search?searchTerm=${encodeURIComponent(defendantSearch)}`,
+          `${API_URL}/people/search?searchTerm=${encodeURIComponent(defendantSearch)}`,
           {
             method: "GET",
             headers: {
@@ -425,7 +425,7 @@ export default function ProcesosModule() {
 
       const token = localStorage.getItem("token")
       if (editingTrial) {
-        const response = await fetch("http://localhost:4000/trial/edit", {
+        const response = await fetch(`${API_URL}/trial/edit`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -457,7 +457,7 @@ export default function ProcesosModule() {
           if (filterType) params.append("filterType", filterType)
           
           const trialsResponse = await fetch(
-            `http://localhost:4000/trial/search?${params.toString()}`,
+            `${API_URL}/trial/search?${params.toString()}`,
             {
               method: "GET",
               headers: {
@@ -503,7 +503,7 @@ export default function ProcesosModule() {
       }
 
       // Si no estamos editando, crear nuevo proceso
-      const response = await fetch("http://localhost:4000/trial/add", {
+      const response = await fetch(`${API_URL}/trial/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -531,7 +531,7 @@ export default function ProcesosModule() {
         if (filterType) params.append("filterType", filterType)
         
         const trialsResponse = await fetch(
-          `http://localhost:4000/trial/search?${params.toString()}`,
+          `${API_URL}/trial/search?${params.toString()}`,
           {
             method: "GET",
             headers: {
@@ -606,7 +606,7 @@ export default function ProcesosModule() {
     try {
       const token = localStorage.getItem("token")
       const response = await fetch(
-        `http://localhost:4000/action/trial/${trial.id}`,
+        `${API_URL}/action/trial/${trial.id}`,
         {
           method: "GET",
           headers: {

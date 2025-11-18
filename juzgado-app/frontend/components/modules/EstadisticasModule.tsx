@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useApp } from "@/contexts/AppContext"
 import { Button } from "@/components/ui/button"
+import { API_URL } from "@/lib/config"
 
 interface MatrixData {
   categoryName: string
@@ -26,7 +27,6 @@ export default function EstadisticasModule() {
   const [previewData, setPreviewData] = useState<PreviewData | null>(null)
   const [loadingPreview, setLoadingPreview] = useState(false)
 
-  // Estadísticas por tipo de proceso
   const procesosPorTipo = procesos.reduce(
     (acc, p) => {
       const existing = acc.find((item) => item.name === p.tipo)
@@ -40,7 +40,6 @@ export default function EstadisticasModule() {
     [] as Array<{ name: string; value: number }>,
   )
 
-  // Estadísticas por tipo de documento
   const personasPorTipoDocumento = personas.reduce(
     (acc, p) => {
       const existing = acc.find((item) => item.name === p.tipoDocumento)
@@ -54,7 +53,6 @@ export default function EstadisticasModule() {
     [] as Array<{ name: string; value: number }>,
   )
 
-  // Actuaciones por tipo
   const actuacionesPorTipo = actuaciones.reduce(
     (acc, a) => {
       const existing = acc.find((item) => item.name === a.tipo)
@@ -102,7 +100,7 @@ export default function EstadisticasModule() {
     try {
       const token = localStorage.getItem("token")
       const response = await fetch(
-        `http://localhost:4000/statistics?startDate=${startDate}&endDate=${endDate}`,
+        `${API_URL}/statistics?startDate=${startDate}&endDate=${endDate}`,
         {
           method: "GET",
           headers: {
@@ -147,7 +145,7 @@ export default function EstadisticasModule() {
     try {
       const token = localStorage.getItem("token")
       const response = await fetch(
-        `http://localhost:4000/statistics/report?startDate=${startDate}&endDate=${endDate}`,
+        `${API_URL}/statistics/report?startDate=${startDate}&endDate=${endDate}`,
         {
           method: "GET",
           headers: {
@@ -161,10 +159,8 @@ export default function EstadisticasModule() {
         throw new Error(errorData.message || "Error al generar el reporte")
       }
 
-      // Obtener el blob del archivo
       const blob = await response.blob()
       
-      // Crear URL temporal y descargar
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
@@ -184,7 +180,6 @@ export default function EstadisticasModule() {
 
   return (
     <div className="space-y-6">
-      {/* Panel de generación de reporte */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <h3 className="text-lg font-semibold text-slate-900 mb-4">Generar Reporte Excel</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
@@ -229,7 +224,6 @@ export default function EstadisticasModule() {
         </div>
       </div>
 
-      {/* Vista Previa de la Matriz */}
       {previewData && (
         <div className="bg-white rounded-lg shadow-md p-6">
           <h3 className="text-lg font-semibold text-slate-900 mb-4">
@@ -320,7 +314,6 @@ export default function EstadisticasModule() {
           </div>
         </div>
       )}
-      {/* Tarjetas de resumen */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-lg shadow-md p-6">
           <p className="text-slate-600 text-sm font-medium mb-1">Total de Procesos</p>
@@ -340,9 +333,7 @@ export default function EstadisticasModule() {
         </div>
       </div>
 
-      {/* Gráficos con barras de progreso */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Procesos por tipo */}
         {procesosPorTipo.length > 0 && (
           <div className="bg-white rounded-lg shadow-md p-6">
             <h3 className="text-lg font-semibold text-slate-900 mb-6">Procesos por Tipo</h3>
@@ -352,7 +343,6 @@ export default function EstadisticasModule() {
           </div>
         )}
 
-        {/* Personas por tipo de documento */}
         {personasPorTipoDocumento.length > 0 && (
           <div className="bg-white rounded-lg shadow-md p-6">
             <h3 className="text-lg font-semibold text-slate-900 mb-6">Personas por Tipo de Documento</h3>
@@ -363,7 +353,6 @@ export default function EstadisticasModule() {
         )}
       </div>
 
-      {/* Actuaciones por tipo */}
       {actuacionesPorTipo.length > 0 && (
         <div className="bg-white rounded-lg shadow-md p-6">
           <h3 className="text-lg font-semibold text-slate-900 mb-6">Actuaciones por Tipo</h3>
@@ -375,7 +364,6 @@ export default function EstadisticasModule() {
         </div>
       )}
 
-      {/* Estadísticas generales */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <h3 className="text-lg font-semibold text-slate-900 mb-6">Resumen General</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

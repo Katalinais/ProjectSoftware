@@ -5,6 +5,7 @@ import authRoutes from "./routes/auth.routes.js";
 import peopleRoutes from "./routes/people.routes.js";
 import trialRoutes from "./routes/trial.routes.js";
 import actionRoutes from "./routes/action.routes.js";
+import statisticsRoutes from "./routes/statistics.routes.js";
 import { verifyToken } from "./middlewares/auth.middleware.js";
 
 dotenv.config();
@@ -23,6 +24,7 @@ app.use("/auth", authRoutes);
 app.use("/people", verifyToken, peopleRoutes);
 app.use("/trial", verifyToken, trialRoutes);
 app.use("/action", verifyToken, actionRoutes);
+app.use("/statistics", statisticsRoutes);
 
 app.get("/", (req, res) => {
   res.json({ message: "🚀 API del Sistema Judicial funcionando correctamente" });

@@ -8,7 +8,8 @@
     "start": "node src/app.js",
     "prisma:init": "npx prisma init",
     "prisma:generate": "npx prisma generate",
-    "prisma:migrate": "npx prisma migrate dev"
+    "prisma:migrate": "npx prisma migrate dev",
+    "seed": "node mocks/seed.js"
   },
   "keywords": [],
   "author": "",
@@ -19,8 +20,10 @@
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
+    "exceljs": "^4.4.0",
     "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10",
